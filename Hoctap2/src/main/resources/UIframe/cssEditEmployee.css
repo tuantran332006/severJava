@@ -1,0 +1,105 @@
+.edit-root {
+    -fx-background-color: transparent;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+}
+
+.detail-container {
+    -fx-background-color: #f8f8fa;
+    -fx-background-radius: 26;
+    -fx-border-color: #d7d7dc;
+    -fx-border-radius: 30;
+    -fx-border-radius: 30;
+}
+
+.detail-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111111;
+}
+
+.avatar-wrapper {
+    -fx-pref-width: 108;
+    -fx-pref-height: 108;
+    -fx-min-width: 108;
+    -fx-min-height: 108;
+}
+
+.avatar-placeholder {
+    -fx-pref-width: 108;
+    -fx-pref-height: 108;
+    -fx-min-width: 108;
+    -fx-min-height: 108;
+    -fx-background-color: linear-gradient(to bottom, #d9d9d9, #bebebe);
+    -fx-background-radius: 999;
+    -fx-border-color: #f5b7bf;
+    -fx-border-width: 3;
+    -fx-border-radius: 999;
+    -fx-alignment: center;
+}
+
+.field-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2d2d2d;
+}
+
+.field-input {
+    -fx-pref-width: 270;
+    -fx-pref-height: 38;
+    -fx-background-color: white;
+    -fx-background-radius: 999;
+    -fx-border-color: #c9c9cf;
+    -fx-border-radius: 999;
+    -fx-padding: 0 14 0 14;
+    -fx-font-size: 14px;
+    -fx-text-fill: #111111;
+    -fx-prompt-text-fill: #999999;
+}
+
+.field-input:focused {
+    -fx-background-color: white;
+    -fx-border-color: #b3b3bb;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+}
+
+.action-row {
+    -fx-padding: 18 0 0 0;
+}
+
+.btn-action {
+    -fx-pref-width: 180;
+    -fx-pref-height: 44;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.btn-cancel {
+    -fx-background-color: white;
+    -fx-text-fill: #222222;
+    -fx-border-color: #c8c8cf;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+}
+
+.btn-cancel:hover {
+    -fx-background-color: #f1f1f4;
+}
+
+.btn-confirm {
+    -fx-background-color: #f4b1b1;
+    -fx-text-fill: #1a1a1a;
+    -fx-border-color: #e59d9d;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+
+.btn-confirm:hover {
+    -fx-background-color: #eea4a4;
+}
+.edit-root{
+
+}

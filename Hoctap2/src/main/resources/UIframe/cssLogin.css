@@ -1,0 +1,96 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #8d3ccf, #c07adf, #9f56d8, #6f2dc7);
+}
+
+/* panel ảnh bên trái */
+.image-pane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+}
+
+/* panel form bên phải */
+.form-pane {
+    -fx-background-color: transparent;
+}
+
+/* khung form kiểu kính mờ */
+.card {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-background-radius: 28;
+    -fx-border-radius: 28;
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+    -fx-border-width: 1.2;
+    -fx-padding: 35 40 30 40;
+    -fx-effect: dropshadow(gaussian, rgba(80, 20, 120, 0.28), 28, 0.25, 0, 8);
+}
+
+/* tiêu đề Login */
+.title {
+    -fx-text-fill: #3f215d;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+}
+
+/* text phụ */
+.sub-text {
+    -fx-text-fill: #3d2357;
+    -fx-font-size: 15px;
+}
+
+/* ô nhập */
+.input {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #6d3c8f transparent;
+    -fx-border-width: 0 0 1.5 0;
+    -fx-text-fill: #2e163f;
+    -fx-prompt-text-fill: #5d4372;
+    -fx-font-size: 16px;
+    -fx-padding: 8 30 8 0;
+    -fx-background-insets: 0;
+}
+
+/* khi focus */
+.input:focused {
+    -fx-border-color: transparent transparent #3f215d transparent;
+    -fx-background-color: transparent;
+}
+
+/* nút login */
+.main-btn {
+    -fx-background-color: linear-gradient(to bottom, #8c5ab2, #24153f);
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-cursor: hand;
+    -fx-pref-height: 48;
+    -fx-pref-width: 250;
+    -fx-effect: dropshadow(gaussian, rgba(36, 21, 63, 0.45), 18, 0.3, 0, 6);
+}
+
+.main-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #9a69bf, #2d1b4d);
+}
+
+.main-btn:pressed {
+    -fx-background-color: linear-gradient(to bottom, #7c4ca5, #1c1131);
+}
+
+/* nút chuyển form */
+.switch-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2f183f;
+    -fx-font-size: 15px;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.switch-btn:hover {
+    -fx-text-fill: #5a2f85;
+    -fx-underline: true;
+}
+.image-pane ImageView {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 40, 0.3, 0, 12);
+}

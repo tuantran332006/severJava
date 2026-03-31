@@ -1,0 +1,155 @@
+.detail-root {
+    -fx-background-color: transparent;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+}
+
+.detail-container {
+    -fx-background-color: #f7f7f9;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+}
+
+.detail-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111111;
+}
+
+.avatar-wrapper {
+    -fx-pref-width: 126;
+    -fx-pref-height: 126;
+}
+
+.avatar-placeholder {
+    -fx-pref-width: 126;
+    -fx-pref-height: 126;
+    -fx-min-width: 126;
+    -fx-min-height: 126;
+    -fx-max-width: 126;
+    -fx-max-height: 126;
+    -fx-background-color: linear-gradient(to bottom, #d9d9d9, #bebebe);
+    -fx-background-radius: 999;
+    -fx-border-color: #f5b7bf;
+    -fx-border-width: 3;
+    -fx-border-radius: 999;
+}
+
+.emp-name {
+    -fx-font-size: 26px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #171717;
+}
+
+.emp-role-vi {
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #ff4f97;
+}
+
+.emp-role-en {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8b8b95;
+}
+
+.tag {
+    -fx-padding: 5 14 5 14;
+    -fx-background-radius: 999;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+.pink-tag {
+    -fx-background-color: #f8cade;
+    -fx-text-fill: #f15199;
+}
+
+.info-card {
+    -fx-pref-width: 248;
+    -fx-pref-height: 98;
+    -fx-padding: 0 16 0 16;
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-color: #bdbdc3;
+    -fx-border-radius: 16;
+}
+
+.icon-box {
+    -fx-pref-width: 44;
+    -fx-pref-height: 44;
+    -fx-background-radius: 14;
+    -fx-alignment: center;
+}
+
+.icon-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+}
+
+.blue-box {
+    -fx-background-color: #cfe0ff;
+}
+.blue-text {
+    -fx-text-fill: #2c6cff;
+}
+
+.green-box {
+    -fx-background-color: #cbefcf;
+}
+.green-text {
+    -fx-text-fill: #21b255;
+}
+
+.purple-box {
+    -fx-background-color: #e9c8ff;
+}
+.purple-text {
+    -fx-text-fill: #9b2cff;
+}
+
+.info-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8e8e96;
+}
+
+.info-value {
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #151515;
+}
+
+.btn-action {
+    -fx-pref-width: 240;
+    -fx-pref-height: 48;
+    -fx-background-radius: 999;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+}
+
+.btn-edit {
+    -fx-background-color: white;
+    -fx-text-fill: #111111;
+    -fx-font-size: 15;
+    -fx-border-color: #bdbdc3;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+}
+
+.btn-edit:hover {
+    -fx-background-color: #f3f3f5;
+}
+
+.btn-delete {
+    -fx-background-color: #f3aaaa;
+    -fx-text-fill: #111111;
+    -fx-border-color: #e59797;
+    -fx-border-radius: 999;
+    -fx-background-radius:999;
+    -fx-font-size: 15;
+}
+
+.btn-delete:hover {
+    -fx-background-color: #ee9d9d;
+}

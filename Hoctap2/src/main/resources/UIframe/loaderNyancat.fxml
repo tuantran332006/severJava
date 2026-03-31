@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.paint.RadialGradient?>
+<StackPane fx:id="rootPane"
+           prefHeight="800.0"
+           prefWidth="1280.0"
+           style="-fx-background-color: black"
+           xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.example.controllerForapp.controllerLoader">
+
+    <children>
+
+        <ImageView fx:id="nyanImageView"
+                   fitWidth="320.0"
+                   preserveRatio="true"
+                   visible="true" />
+
+        <Circle fx:id="purpleOverlay"
+                visible="false"
+                opacity="0"
+                radius="40.0">
+            <fill>
+                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                    <stops>
+                        <Stop offset="0.0" color="#c07adf"/>
+                        <Stop offset="0.4" color="#9f56d8"/>
+                        <Stop offset="0.8" color="#6f2dc7"/>
+                        <Stop offset="1.0" color="transparent"/>
+                    </stops>
+                </RadialGradient>
+            </fill>
+        </Circle>
+
+        <HBox fx:id="helloBox"
+              alignment="CENTER"
+              opacity="0"
+              spacing="12"
+              visible="false">
+            <children>
+                <ImageView fx:id="helloIcon" fitHeight="140" fitWidth="140">
+                    <image>
+                        <Image url="@../image/fc7606b3-61dd-4270-8f94-de68dd1f2f75.png" />
+                    </image>
+                </ImageView>
+
+                <Label style="-fx-text-fill: white; -fx-font-size: 100px; -fx-font-weight: bold;"
+                       text="Hello">
+                    <font>
+                        <Font size="100.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+
+    </children>
+</StackPane>

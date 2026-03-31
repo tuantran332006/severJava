@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="popupPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="440.0" styleClass="edit-root" stylesheets="@cssEditEmployee.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllerForapp.controllerEditEmployee">
+
+    <center>
+        <VBox fx:id="detailContainer" alignment="TOP_LEFT" prefHeight="600.0" prefWidth="374.0" spacing="26" styleClass="detail-container">
+            <padding>
+                <Insets bottom="28" left="28" right="28" top="24" />
+            </padding>
+
+            <!-- Title -->
+            <Label styleClass="detail-title" text="Chỉnh sửa nhân viên" />
+
+            <!-- Top area -->
+            <HBox alignment="TOP_LEFT" spacing="32">
+
+                <!-- Avatar -->
+                <StackPane alignment="TOP_LEFT" prefHeight="305.0" styleClass="avatar-wrapper">
+                    <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="142.0" prefWidth="132.0" styleClass="avatar-placeholder">
+                        <children>
+                            <ImageView fitHeight="88.0" fitWidth="88.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@../image/icons8-user-default-64.png" />
+                                </image>
+                            </ImageView>
+                        </children>
+                    </StackPane>
+                </StackPane>
+
+                <!-- Form -->
+                <VBox spacing="14" HBox.hgrow="ALWAYS">
+
+                    <VBox spacing="6">
+                        <Label styleClass="field-label" text="Họ và tên" />
+                        <TextField fx:id="txtName" styleClass="field-input" />
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label styleClass="field-label" text="Chức vụ" />
+                        <TextField fx:id="txtRole" styleClass="field-input" />
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label styleClass="field-label" text="Email" />
+                        <TextField fx:id="txtEmail" styleClass="field-input" />
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label styleClass="field-label" text="Số điện thoại" />
+                        <TextField fx:id="txtPhone" styleClass="field-input" />
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label styleClass="field-label" text="Trạng thái làm việc" />
+                        <TextField fx:id="txtStatus" styleClass="field-input" />
+                    </VBox>
+                </VBox>
+            </HBox>
+
+            <!-- Bottom buttons -->
+            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="382.0" spacing="22" styleClass="action-row">
+
+                <Button fx:id="btnConfirm" onAction="#handleConfirm" prefHeight="42.0" prefWidth="103.0" styleClass="btn-confirm" text="Xác nhận" />
+                <Button fx:id="btnCancel" onAction="#handleCancel" prefHeight="42.0" prefWidth="97.0" styleClass="btn-cancel" text="Hủy" />
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>
