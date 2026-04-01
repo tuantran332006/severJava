@@ -44,25 +44,16 @@ public class DangNhapController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> dangKy(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> dangKy(@RequestBody User user) {
         try {
-            if (request.getUsername() == null || request.getUsername().isBlank()
-                    || request.getPassword() == null || request.getPassword().isBlank()) {
-                return ResponseEntity.badRequest().body("Username hoặc password không được để trống");
-            }
+            UserView userView = dangNhapService.dangKyVaTraUser(user, user.getPassword());
 
-            User user = new User();
-            user.setUsername(request.getUsername());
-            user.setPassword(request.getPassword());
-            user.setVai_tro("NHANVIEN");
-
-            boolean success = dangNhapService.dangKy(user, request.getPassword());
-
-            if (!success) {
+            if (userView == null) {
                 return ResponseEntity.badRequest().body("Username đã tồn tại");
             }
 
-            return ResponseEntity.ok("Đăng ký thành công");
+            return ResponseEntity.ok(userView);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Lỗi đăng ký: " + e.getMessage());
