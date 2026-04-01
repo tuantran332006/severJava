@@ -1,22 +1,19 @@
 package com.example.demo.model;
 
 public class SanPham {
-    private int idSp;
-    private String tenSp;
-    private double giaSp;
-    private int tongSoLuongSpTrongKho;
-    private int idLoai;
-    private String donViTinh;
-    private String moTa;
+	private Integer idSp;
+	private String tenSp;
+	private Double giaSp;
+	private Integer tongSoLuongSpTrongKho;
+	private Integer idLoai;
+	private String donViTinh;
+	private String moTa;
 
+	public SanPham() {
+	}
 
-    public SanPham() {
-    }
-
-
-	public SanPham(int idSp, String tenSp, double giaSp, int tongSoLuongSpTrongKho, int idLoai, String donViTinh,
-			String moTa) {
-		super();
+	public SanPham(Integer idSp, String tenSp, Double giaSp, Integer tongSoLuongSpTrongKho,
+				   Integer idLoai, String donViTinh, String moTa) {
 		this.idSp = idSp;
 		this.tenSp = tenSp;
 		this.giaSp = giaSp;
@@ -26,74 +23,59 @@ public class SanPham {
 		this.moTa = moTa;
 	}
 
-
-	public int getIdSp() {
+	public Integer getIdSp() {
 		return idSp;
 	}
 
-
-	public void setIdSp(int idSp) {
+	public void setIdSp(Integer idSp) {
 		this.idSp = idSp;
 	}
-
 
 	public String getTenSp() {
 		return tenSp;
 	}
 
-
 	public void setTenSp(String tenSp) {
 		this.tenSp = tenSp;
 	}
 
-
-	public double getGiaSp() {
+	public Double getGiaSp() {
 		return giaSp;
 	}
 
-
-	public void setGiaSp(double giaSp) {
+	public void setGiaSp(Double giaSp) {
 		this.giaSp = giaSp;
 	}
 
-
-	public int getTongSoLuongSpTrongKho() {
+	public Integer getTongSoLuongSpTrongKho() {
 		return tongSoLuongSpTrongKho;
 	}
 
-
-	public void setTongSoLuongSpTrongKho(int tongSoLuongSpTrongKho) {
+	public void setTongSoLuongSpTrongKho(Integer tongSoLuongSpTrongKho) {
 		this.tongSoLuongSpTrongKho = tongSoLuongSpTrongKho;
 	}
 
-
-	public int getIdLoai() {
+	public Integer getIdLoai() {
 		return idLoai;
 	}
 
-
-	public void setIdLoai(int idLoai) {
+	public void setIdLoai(Integer idLoai) {
 		this.idLoai = idLoai;
 	}
-
 
 	public String getDonViTinh() {
 		return donViTinh;
 	}
 
-
 	public void setDonViTinh(String donViTinh) {
 		this.donViTinh = donViTinh;
 	}
-
 
 	public String getMoTa() {
 		return moTa;
 	}
 
-
 	public void setMoTa(String moTa) {
 		this.moTa = moTa;
 	}
-
 }

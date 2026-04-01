@@ -2,22 +2,22 @@ package com.example.demo.model;
 
 public class SanPhamRequest {
 
-    private int idSp;
+    private Integer idSp;
     private String tenSp;
-    private double giaSp;
-    private int tongSoLuongSpTrongKho;
-    private int idLoai;
+    private Double giaSp;
+    private Integer tongSoLuongSpTrongKho;
+    private Integer idLoai;
     private String donViTinh;
     private String moTa;
 
-
     public SanPhamRequest() {
     }
-    public int getIdSp() {
+
+    public Integer getIdSp() {
         return idSp;
     }
 
-    public void setIdSp(int idSp) {
+    public void setIdSp(Integer idSp) {
         this.idSp = idSp;
     }
 
@@ -29,27 +29,27 @@ public class SanPhamRequest {
         this.tenSp = tenSp;
     }
 
-    public double getGiaSp() {
+    public Double getGiaSp() {
         return giaSp;
     }
 
-    public void setGiaSp(double giaSp) {
+    public void setGiaSp(Double giaSp) {
         this.giaSp = giaSp;
     }
 
-    public int getTongSoLuongSpTrongKho() {
+    public Integer getTongSoLuongSpTrongKho() {
         return tongSoLuongSpTrongKho;
     }
 
-    public void setTongSoLuongSpTrongKho(int tongSoLuongSpTrongKho) {
+    public void setTongSoLuongSpTrongKho(Integer tongSoLuongSpTrongKho) {
         this.tongSoLuongSpTrongKho = tongSoLuongSpTrongKho;
     }
 
-    public int getIdLoai() {
+    public Integer getIdLoai() {
         return idLoai;
     }
 
-    public void setIdLoai(int idLoai) {
+    public void setIdLoai(Integer idLoai) {
         this.idLoai = idLoai;
     }
 
@@ -68,7 +68,4 @@ public class SanPhamRequest {
     public void setMoTa(String moTa) {
         this.moTa = moTa;
     }
-
-
-
 }

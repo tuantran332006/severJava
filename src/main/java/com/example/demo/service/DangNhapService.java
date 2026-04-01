@@ -65,36 +65,6 @@ public class DangNhapService {
         return userDAO.existsByUsername(username);
     }
 
-    @Transactional
-    public boolean dangKy(User newUser, String plainPassword) {
-        if (kiemTraTonTaiUsername(newUser.getUsername())) {
-            return false;
-        }
-
-        NhanVien nv = new NhanVien();
-        nv.setHo_ten("Not Update");
-        nv.setGioi_tinh("");
-        nv.setTuoi(0);
-        nv.setLuong(0);
-        nv.setThoi_gian_gan_bo(0);
-        nv.setDiem_thuong(0);
-        nv.setDiem_danh(0);
-        nv.setSo_dien_thoai("");
-        nv.setDia_chi("");
-        nv.setChuc_vu("Nhân viên");
-        nv.setNgay_vao_lam(LocalDateTime.now());
-
-        Integer idNhanVien = nhanVienDAO.insertAndReturnId(nv);
-        if (idNhanVien == null) {
-            return false;
-        }
-
-        newUser.setPassword(plainPassword);
-        newUser.setVai_tro("NHANVIEN");
-        newUser.setId_nhan_vien(idNhanVien);
-
-        return userDAO.insert(newUser);
-    }
 
     public static class UserView {
         private Integer id_user;

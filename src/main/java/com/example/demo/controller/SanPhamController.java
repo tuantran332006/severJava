@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.SanPham;
+import com.example.demo.model.SanPhamRequest;
 import com.example.demo.service.SanPhamService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -20,90 +21,93 @@ public class SanPhamController {
 
     private final SanPhamService sanPhamService;
 
-    // ✅ Constructor injection – ĐÚNG CHUẨN SPRING BOOT
     public SanPhamController(SanPhamService sanPhamService) {
         this.sanPhamService = sanPhamService;
     }
 
-    // ========================== CRUD ==========================
-
-    /** Tạo mới sản phẩm */
     @PostMapping
-    public ResponseEntity<SanPham> taoSanPham(
-            @Valid @RequestBody SanPham request) {
+    public ResponseEntity<?> taoSanPham(@RequestBody SanPhamRequest request) {
+        SanPham sp = new SanPham();
+        sp.setTenSp(request.getTenSp());
+        sp.setGiaSp(request.getGiaSp());
+        sp.setTongSoLuongSpTrongKho(request.getTongSoLuongSpTrongKho());
+        sp.setIdLoai(request.getIdLoai());
+        sp.setDonViTinh(request.getDonViTinh());
+        sp.setMoTa(request.getMoTa());
 
-        boolean ok = sanPhamService.themSanPham(request);
+        boolean ok = sanPhamService.themSanPham(sp);
+
         if (ok) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(sp);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body("Thêm sản phẩm thất bại");
     }
 
-    /** Tạo mới và trả về id */
     @PostMapping("/return-id")
-    public ResponseEntity<Integer> taoSanPhamVaLayId(
-            @Valid @RequestBody SanPham request) {
+    public ResponseEntity<Integer> taoSanPhamVaLayId(@RequestBody SanPhamRequest request) {
+        SanPham sp = new SanPham();
+        sp.setTenSp(request.getTenSp());
+        sp.setGiaSp(request.getGiaSp());
+        sp.setTongSoLuongSpTrongKho(request.getTongSoLuongSpTrongKho());
+        sp.setIdLoai(request.getIdLoai());
+        sp.setDonViTinh(request.getDonViTinh());
+        sp.setMoTa(request.getMoTa());
 
-        int id = sanPhamService.themSanPhamVaLayId(request);
+        int id = sanPhamService.themSanPhamVaLayId(sp);
         if (id > 0) {
             return ResponseEntity.status(HttpStatus.CREATED).body(id);
         }
         return ResponseEntity.badRequest().body(-1);
     }
 
-    /** Cập nhật sản phẩm */
     @PutMapping("/{id}")
     public ResponseEntity<Void> capNhatSanPham(
             @PathVariable int id,
-            @Valid @RequestBody SanPham request) {
+            @RequestBody SanPhamRequest request) {
 
-        request.setIdSp(id); // ✅ đúng
-        boolean ok = sanPhamService.capNhatSanPham(request);
+        SanPham sp = new SanPham();
+        sp.setIdSp(id);
+        sp.setTenSp(request.getTenSp());
+        sp.setGiaSp(request.getGiaSp());
+        sp.setTongSoLuongSpTrongKho(request.getTongSoLuongSpTrongKho());
+        sp.setIdLoai(request.getIdLoai());
+        sp.setDonViTinh(request.getDonViTinh());
+        sp.setMoTa(request.getMoTa());
+
+        boolean ok = sanPhamService.capNhatSanPham(sp);
         return ok ? ResponseEntity.noContent().build()
-                  : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
-    /** Xoá sản phẩm */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> xoaSanPham(@PathVariable int id) {
         boolean ok = sanPhamService.xoaSanPham(id);
         return ok ? ResponseEntity.noContent().build()
-                  : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
-    // ========================== QUERY ==========================
-
-    /** Lấy theo id */
     @GetMapping("/{id}")
     public ResponseEntity<SanPham> layTheoId(@PathVariable int id) {
         SanPham sp = sanPhamService.timTheoId(id);
         return sp != null ? ResponseEntity.ok(sp)
-                          : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
-    /** Lấy tất cả */
     @GetMapping
     public ResponseEntity<List<SanPham>> layTatCa() {
         return ResponseEntity.ok(sanPhamService.layTatCa());
     }
 
-    /** Tìm theo loại */
     @GetMapping("/by-loai")
-    public ResponseEntity<List<SanPham>> timTheoLoai(
-            @RequestParam @Min(1) int idLoai) {
-
+    public ResponseEntity<List<SanPham>> timTheoLoai(@RequestParam @Min(1) int idLoai) {
         return ResponseEntity.ok(sanPhamService.timTheoLoai(idLoai));
     }
 
-    /** Tìm theo tên */
     @GetMapping("/search")
-    public ResponseEntity<List<SanPham>> timTheoTen(
-            @RequestParam("q") @NotBlank String ten) {
-
+    public ResponseEntity<List<SanPham>> timTheoTen(@RequestParam("q") @NotBlank String ten) {
         return ResponseEntity.ok(sanPhamService.timTheoTen(ten));
     }
 
-    /** Tìm theo khoảng giá */
     @GetMapping("/by-khoang-gia")
     public ResponseEntity<List<SanPham>> timTheoKhoangGia(
             @RequestParam @Min(0) double min,
@@ -112,18 +116,13 @@ public class SanPhamController {
         if (max < min) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(
-                sanPhamService.timTheoKhoangGia(min, max)
-        );
+        return ResponseEntity.ok(sanPhamService.timTheoKhoangGia(min, max));
     }
 
-    /** Kiểm tra tồn tại */
     @GetMapping("/{id}/exists")
     public ResponseEntity<Boolean> tonTaiTheoId(@PathVariable int id) {
         return ResponseEntity.ok(sanPhamService.tonTaiTheoId(id));
     }
-
-    // ========================== TỒN KHO ==========================
 
     @PatchMapping("/{id}/tong-so-luong")
     public ResponseEntity<Void> capNhatTongSoLuong(
@@ -132,7 +131,7 @@ public class SanPhamController {
 
         boolean ok = sanPhamService.capNhatTongSoLuong(id, req.getTongSoLuongMoi());
         return ok ? ResponseEntity.noContent().build()
-                  : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/{id}/tang-so-luong")
@@ -142,7 +141,7 @@ public class SanPhamController {
 
         boolean ok = sanPhamService.tangSoLuong(id, req.getSoLuong());
         return ok ? ResponseEntity.noContent().build()
-                  : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/{id}/giam-so-luong")
@@ -151,11 +150,9 @@ public class SanPhamController {
             @RequestBody @Valid DieuChinhSoLuongRequest req) {
 
         boolean ok = sanPhamService.giamSoLuong(id, req.getSoLuong());
-        return ok ? ResponseEntity.noContent().build()
-                  : ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return ok ? ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+                : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
-
-    // ========================== DTO ==========================
 
     public static class CapNhatTongSoLuongRequest {
         @NotNull
