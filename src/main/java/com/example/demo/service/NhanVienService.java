@@ -34,7 +34,7 @@ public class NhanVienService {
         return nhanVienDAO.update(nv);
     }
 
-    public boolean xoaNhanVien(int idNhanVien) {
+    public boolean xoaNhanVien(Integer idNhanVien) {
         return nhanVienDAO.delete(idNhanVien);
     }
 

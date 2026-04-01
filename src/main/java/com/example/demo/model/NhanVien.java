@@ -60,7 +60,7 @@ public class NhanVien {
     }
 
     // --- Getter và Setter cho các thuộc tính khác ---
-    public int getId_nhan_vien() { return id_nhan_vien; }
+    public Integer getId_nhan_vien() { return id_nhan_vien; }
     public void setId_nhan_vien(Integer id_nhan_vien) { this.id_nhan_vien = id_nhan_vien; }
 
     public String getHo_ten() { return ho_ten; }

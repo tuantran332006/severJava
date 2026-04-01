@@ -9,7 +9,7 @@ public class UserRequest {
 
     @JsonProperty("id_user")
     @JsonAlias({"idUser"})
-    private int id_user;
+    private Integer id_user;
 
     @JsonProperty("username")
     private String username;
@@ -20,16 +20,16 @@ public class UserRequest {
 
     @JsonProperty("id_nhan_vien")
     @JsonAlias({"idNhanVien"})
-    private int id_nhan_vien;
+    private Integer id_nhan_vien;
 
     public UserRequest() {
     }
 
-    public int getId_user() {
+    public Integer getId_user() {
         return id_user;
     }
 
-    public void setId_user(int id_user) {
+    public void setId_user(Integer id_user) {
         this.id_user = id_user;
     }
 
@@ -49,11 +49,11 @@ public class UserRequest {
         this.vai_tro = vai_tro;
     }
 
-    public int getId_nhan_vien() {
+    public Integer getId_nhan_vien() {
         return id_nhan_vien;
     }
 
-    public void setId_nhan_vien(int id_nhan_vien) {
+    public void setId_nhan_vien(Integer id_nhan_vien) {
         this.id_nhan_vien = id_nhan_vien;
     }
 

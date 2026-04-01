@@ -5,11 +5,11 @@ public class User {
     private String username;
     private String password;
     private String vai_tro;
-    private int id_nhan_vien;
+    private Integer id_nhan_vien;
 
     public User() {}
 
-    public User(Integer id_user, String username, String password, String vai_tro, int id_nhan_vien) {
+    public User(Integer id_user, String username, String password, String vai_tro, Integer id_nhan_vien) {
         this.id_user = id_user;
         this.username = username;
         this.password = password;
@@ -17,7 +17,7 @@ public class User {
         this.id_nhan_vien = id_nhan_vien;
     }
 
-    public int getId_user() {
+    public Integer getId_user() {
         return id_user;
     }
 
@@ -33,10 +33,6 @@ public class User {
         this.username = username;
     }
 
-    /** 
-     * ⚠️ Lưu ý: trường password nên chứa HASH, không phải plaintext.
-     * Hãy hash ở Service trước khi lưu DB (VD: BCrypt/Argon2).
-     */
     public String getPassword() {
         return password;
     }
@@ -53,7 +49,7 @@ public class User {
         this.vai_tro = vai_tro;
     }
 
-    public int getId_nhan_vien() {
+    public Integer getId_nhan_vien() {
         return id_nhan_vien;
     }
 
@@ -63,7 +59,6 @@ public class User {
 
     @Override
     public String toString() {
-        // ⚠️ Không nên in password thật — thay bằng mask
         return "User{" +
                 "id_user=" + id_user +
                 ", username='" + username + '\'' +

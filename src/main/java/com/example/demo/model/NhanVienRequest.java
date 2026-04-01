@@ -3,7 +3,7 @@ package com.example.demo.model;
 import java.time.LocalDateTime;
 
 public class NhanVienRequest {
-    private int id_nhan_vien;
+    private Integer id_nhan_vien;
     private String ho_ten;
     private String gioi_tinh;
     private int tuoi;
@@ -19,11 +19,11 @@ public class NhanVienRequest {
     public NhanVienRequest() {
     }
 
-    public int getId_nhan_vien() {
+    public Integer getId_nhan_vien() {
         return id_nhan_vien;
     }
 
-    public void setId_nhan_vien(int id_nhan_vien) {
+    public void setId_nhan_vien(Integer id_nhan_vien) {
         this.id_nhan_vien = id_nhan_vien;
     }
 

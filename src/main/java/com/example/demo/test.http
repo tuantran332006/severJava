@@ -1,7 +1,7 @@
-POST https://severjava.onrender.com/api/auth/login
+POST https://severjava.onrender.com/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "admin",
+  "username": "test123",
   "password": "123456"
 }

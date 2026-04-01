@@ -27,11 +27,11 @@ public class HoaDonRequest {
         this.id_kh = id_kh;
     }
 
-    public int getId_nhan_vien() {
+    public Integer getId_nhan_vien() {
         return id_nhan_vien;
     }
 
-    public void setId_nhan_vien(int id_nhan_vien) {
+    public void setId_nhan_vien(Integer id_nhan_vien) {
         this.id_nhan_vien = id_nhan_vien;
     }
 
