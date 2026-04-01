@@ -1,17 +1,24 @@
 package com.example.demo.service;
 
+import com.example.demo.dao.impl.NhanVienDAOImpl;
 import com.example.demo.dao.impl.UserDAOImpl;
+import com.example.demo.model.NhanVien;
 import com.example.demo.model.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+
 @Service
 public class DangNhapService {
 
     private final UserDAOImpl userDAO;
+    private final NhanVienDAOImpl nhanVienDAO;
 
-    public DangNhapService(UserDAOImpl userDAO) {
+    public DangNhapService(UserDAOImpl userDAO, NhanVienDAOImpl nhanVienDAO) {
         this.userDAO = userDAO;
+        this.nhanVienDAO = nhanVienDAO;
     }
 
     public UserView dangNhap(String username, String passwordPlain) {
@@ -33,22 +40,44 @@ public class DangNhapService {
         return userDAO.existsByUsername(username);
     }
 
+    @Transactional
     public boolean dangKy(User newUser, String plainPassword) {
         if (kiemTraTonTaiUsername(newUser.getUsername())) {
             return false;
         }
 
+        NhanVien nv = new NhanVien();
+        nv.setHo_ten(newUser.getUsername());
+        nv.setGioi_tinh("");
+        nv.setTuoi(0);
+        nv.setLuong(0);
+        nv.setThoi_gian_gan_bo(0);
+        nv.setDiem_thuong(0);
+        nv.setDiem_danh(0);
+        nv.setSo_dien_thoai("");
+        nv.setDia_chi("");
+        nv.setChuc_vu("Nhân viên");
+        nv.setNgay_vao_lam(LocalDateTime.now());
+
+        Integer idNhanVien = nhanVienDAO.insertAndReturnId(nv);
+        if (idNhanVien == null) {
+            return false;
+        }
+
         newUser.setPassword(plainPassword);
+        newUser.setVai_tro("NHANVIEN");
+        newUser.setId_nhan_vien(idNhanVien);
+
         return userDAO.insert(newUser);
     }
 
     public static class UserView {
-        private int id_user;
+        private Integer id_user;
         private String username;
         private String vai_tro;
         private Integer id_nhan_vien;
 
-        public int getId_user() { return id_user; }
+        public Integer getId_user() { return id_user; }
         public String getUsername() { return username; }
         public String getVai_tro() { return vai_tro; }
         public Integer getId_nhan_vien() { return id_nhan_vien; }
