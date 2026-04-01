@@ -47,7 +47,7 @@ public class DangNhapService {
         }
 
         NhanVien nv = new NhanVien();
-        nv.setHo_ten(newUser.getUsername());
+        nv.setHo_ten("Not Update");
         nv.setGioi_tinh("");
         nv.setTuoi(0);
         nv.setLuong(0);
