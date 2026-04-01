@@ -39,27 +39,47 @@ public class DangNhapController {
             return ResponseEntity.ok(userView);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body("Lỗi đăng nhập: " + e.getMessage());
         }
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> dangKy(@RequestBody User user) {
+        try {
+            System.out.println("register user = " + user);
+            System.out.println("register username = " + user.getUsername());
+            System.out.println("register password = " + user.getPassword());
 
-        boolean success = dangNhapService.dangKy(user, user.getPassword());
+            if (user.getUsername() == null || user.getUsername().isBlank()
+                    || user.getPassword() == null || user.getPassword().isBlank()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Username hoặc password không được để trống");
+            }
 
-        if (!success) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Username đã tồn tại");
+            boolean success = dangNhapService.dangKy(user, user.getPassword());
+
+            if (!success) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Username đã tồn tại");
+            }
+
+            return ResponseEntity.ok("Đăng ký thành công");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Lỗi đăng ký: " + e.getMessage());
         }
-
-        return ResponseEntity.ok("Đăng ký thành công");
     }
 
     @GetMapping("/exists/{username}")
     public ResponseEntity<?> kiemTraUsername(@PathVariable String username) {
-        boolean exists = dangNhapService.kiemTraTonTaiUsername(username);
-        return ResponseEntity.ok(exists);
+        try {
+            boolean exists = dangNhapService.kiemTraTonTaiUsername(username);
+            return ResponseEntity.ok(exists);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Lỗi kiểm tra username: " + e.getMessage());
+        }
     }
 }
