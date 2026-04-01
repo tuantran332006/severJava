@@ -1,7 +1,6 @@
 package com.example.demo.dao.impl;
 
 import com.example.demo.model.User;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,6 +19,8 @@ public class UserDAOImpl {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // ========================== ROW MAPPER ==========================
+
     private static class UserRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -28,19 +29,14 @@ public class UserDAOImpl {
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
             user.setVai_tro(rs.getString("vai_tro"));
-
-            int idNhanVien = rs.getInt("id_nhan_vien");
-            if (rs.wasNull()) {
-                user.setId_nhan_vien(null);
-            } else {
-                user.setId_nhan_vien(idNhanVien);
-            }
-
+            user.setId_nhan_vien(rs.getInt("id_nhan_vien"));
             return user;
         }
     }
 
     private final RowMapper<User> rowMapper = new UserRowMapper();
+
+    // ========================= INSERT =========================
 
     public Integer insertAndReturnId(User entity) {
         String sql = """
@@ -61,18 +57,15 @@ public class UserDAOImpl {
     }
 
     public boolean insert(User entity) {
-        try {
-            Integer id = insertAndReturnId(entity);
-            if (id != null && id > 0) {
-                entity.setId_user(id);
-                return true;
-            }
-            return false;
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return false;
+        Integer id = insertAndReturnId(entity);
+        if (id != null && id > 0) {
+            entity.setId_user(id);
+            return true;
         }
+        return false;
     }
+
+    // ========================= QUERY =========================
 
     public Optional<User> findByUsername(String username) {
         List<User> list = jdbcTemplate.query(
@@ -108,6 +101,8 @@ public class UserDAOImpl {
                 "%" + keyword + "%"
         );
     }
+
+    // ========================= UPDATE =========================
 
     public boolean updatePassword(int idUser, String hashedPassword) {
         return jdbcTemplate.update(

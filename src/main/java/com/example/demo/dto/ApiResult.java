@@ -35,22 +35,22 @@ public class ApiResult<T> {
 
     // =================== FACTORY METHODS ===================
 
-    /** ✅ Thành công – không data */
+    /**  Thành công – không data */
     public static <T> ApiResult<T> ok(String message) {
         return new ApiResult<>(true, message, null, null);
     }
 
-    /** ✅ Thành công – có data */
+    /** Thành công – có data */
     public static <T> ApiResult<T> ok(String message, T data) {
         return new ApiResult<>(true, message, null, data);
     }
 
-    /** ❌ Thất bại – message đơn giản */
+    /**  Thất bại – message đơn giản */
     public static <T> ApiResult<T> fail(String message) {
         return new ApiResult<>(false, message, "ERROR", null);
     }
 
-    /** ❌ Thất bại – có errorCode */
+    /**  Thất bại – có errorCode */
     public static <T> ApiResult<T> fail(String errorCode, String message) {
         return new ApiResult<>(false, message, errorCode, null);
     }

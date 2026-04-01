@@ -21,7 +21,7 @@ public class NhanVien {
     public NhanVien() {
     }
 
-    public NhanVien(int id_nhan_vien, String ho_ten, String gioi_tinh, int tuoi, double luong, 
+    public NhanVien(Integer id_nhan_vien, String ho_ten, String gioi_tinh, int tuoi, double luong,
                    int thoi_gian_gan_bo, int diem_thuong, int diem_danh, String so_dien_thoai, 
                    String dia_chi, String chuc_vu, LocalDateTime ngay_vao_lam) {
         this.id_nhan_vien = id_nhan_vien;

@@ -39,15 +39,6 @@ public class DangNhapService {
         }
 
         newUser.setPassword(plainPassword);
-
-        if (newUser.getVai_tro() == null || newUser.getVai_tro().isBlank()) {
-            newUser.setVai_tro("NHANVIEN");
-        }
-
-        if (newUser.getId_nhan_vien() != null && newUser.getId_nhan_vien() <= 0) {
-            newUser.setId_nhan_vien(null);
-        }
-
         return userDAO.insert(newUser);
     }
 
