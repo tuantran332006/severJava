@@ -44,11 +44,9 @@ public class DangNhapController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> dangKy(
-            @RequestBody User user,
-            @RequestParam String password) {
+    public ResponseEntity<?> dangKy(@RequestBody User user) {
 
-        boolean success = dangNhapService.dangKy(user, password);
+        boolean success = dangNhapService.dangKy(user, user.getPassword());
 
         if (!success) {
             return ResponseEntity
