@@ -23,17 +23,15 @@ public class NhanVienController {
 
     private final NhanVienService nhanVienService;
 
-    // ✅ Constructor injection – ĐÚNG CHUẨN SPRING BOOT
     public NhanVienController(NhanVienService nhanVienService) {
         this.nhanVienService = nhanVienService;
     }
 
-    // ========================== CRUD ==========================
-
-    /** Tạo nhân viên; nếu thành công entity trả về sẽ có id. */
     @PostMapping
-    public ResponseEntity<NhanVien> taoNhanVien(
-            @Valid @RequestBody NhanVien request) {
+    public ResponseEntity<NhanVien> taoNhanVien(@Valid @RequestBody NhanVien request) {
+        if (request.getHo_ten() == null || request.getHo_ten().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
 
         boolean ok = nhanVienService.themNhanVien(request);
         if (ok) {
@@ -42,10 +40,11 @@ public class NhanVienController {
         return ResponseEntity.badRequest().build();
     }
 
-    /** Tạo nhân viên và trả về ID tự tăng. */
     @PostMapping("/return-id")
-    public ResponseEntity<Integer> taoNhanVienVaLayId(
-            @Valid @RequestBody NhanVien request) {
+    public ResponseEntity<Integer> taoNhanVienVaLayId(@Valid @RequestBody NhanVien request) {
+        if (request.getHo_ten() == null || request.getHo_ten().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(-1);
+        }
 
         int newId = nhanVienService.themNhanVienVaLayId(request);
         if (newId > 0) {
@@ -54,45 +53,48 @@ public class NhanVienController {
         return ResponseEntity.badRequest().body(-1);
     }
 
-    /** Cập nhật nhân viên theo id path. */
     @PutMapping("/{id}")
     public ResponseEntity<Void> capNhatNhanVien(
             @PathVariable("id") int id,
             @Valid @RequestBody NhanVien request) {
 
+        if (request.getHo_ten() == null || request.getHo_ten().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         request.setId_nhan_vien(id);
         boolean ok = nhanVienService.capNhatNhanVien(request);
         return ok ? ResponseEntity.noContent().build()
-                  : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
-    /** Xóa nhân viên. */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> xoaNhanVien(@PathVariable("id") int id) {
         boolean ok = nhanVienService.xoaNhanVien(id);
         return ok ? ResponseEntity.noContent().build()
-                  : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
-    // ========================== QUERY ==========================
-
-    /** Lấy chi tiết nhân viên theo id. */
     @GetMapping("/{id}")
     public ResponseEntity<NhanVien> layTheoId(@PathVariable("id") int id) {
         NhanVien nv = nhanVienService.timTheoId(id);
         return nv != null ? ResponseEntity.ok(nv)
-                          : ResponseEntity.notFound().build();
+                : ResponseEntity.notFound().build();
     }
 
-    /** Lấy tất cả nhân viên. */
     @GetMapping
     public ResponseEntity<List<NhanVien>> layTatCa() {
-        return ResponseEntity.ok(nhanVienService.layTatCaNhanVien());
+        List<NhanVien> list = nhanVienService.layTatCaNhanVien();
+
+        list.removeIf(nv ->
+                nv == null ||
+                        nv.getHo_ten() == null ||
+                        nv.getHo_ten().trim().isEmpty()
+        );
+
+        return ResponseEntity.ok(list);
     }
 
-    // ========================== THEO THỜI GIAN ==========================
-
-    /** Tìm theo ngày vào làm (yyyy-MM-dd). */
     @GetMapping("/by-date")
     public ResponseEntity<List<NhanVien>> timTheoNgayVaoLam(
             @RequestParam("date")
@@ -101,7 +103,6 @@ public class NhanVienController {
         return ResponseEntity.ok(nhanVienService.timTheoNgayVaoLam(date));
     }
 
-    /** Tìm theo tháng vào làm (yyyy-MM). */
     @GetMapping("/by-month")
     public ResponseEntity<List<NhanVien>> timTheoThangVaoLam(
             @RequestParam("month") @NotBlank String month) {
@@ -111,7 +112,6 @@ public class NhanVienController {
         );
     }
 
-    /** Tìm theo năm vào làm. */
     @GetMapping("/by-year")
     public ResponseEntity<List<NhanVien>> timTheoNamVaoLam(
             @RequestParam("year") @Min(1970) @Max(3000) int year) {

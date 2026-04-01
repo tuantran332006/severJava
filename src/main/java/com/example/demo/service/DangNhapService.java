@@ -25,23 +25,21 @@ public class DangNhapService {
             return null;
         }
 
-        // tạo nhân viên
-        NhanVien nv = new NhanVien();
-        nv.setHo_ten("Chưa cập nhật");
-        nv.setNgay_vao_lam(LocalDateTime.now());
-
-        Integer idNhanVien = nhanVienDAO.insertAndReturnId(nv);
-        if (idNhanVien == null) {
-            throw new RuntimeException("Không tạo được nhân viên");
+        if (newUser.getId_nhan_vien() == null) {
+            throw new RuntimeException("Thiếu id_nhan_vien");
         }
 
         newUser.setPassword(plainPassword);
-        newUser.setVai_tro("NHANVIEN");
-        newUser.setId_nhan_vien(idNhanVien);
+
+        if (newUser.getVai_tro() == null || newUser.getVai_tro().isBlank()) {
+            newUser.setVai_tro("NHANVIEN");
+        }
 
         boolean inserted = userDAO.insert(newUser);
 
-        if (!inserted) return null;
+        if (!inserted) {
+            return null;
+        }
 
         return UserView.from(newUser);
     }
