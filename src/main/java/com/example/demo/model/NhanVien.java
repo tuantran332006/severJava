@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class NhanVien {
-    private int id_nhan_vien;
+    private Integer id_nhan_vien;
     private String ho_ten;
     private String gioi_tinh;
     private int tuoi;
@@ -61,7 +61,7 @@ public class NhanVien {
 
     // --- Getter và Setter cho các thuộc tính khác ---
     public int getId_nhan_vien() { return id_nhan_vien; }
-    public void setId_nhan_vien(int id_nhan_vien) { this.id_nhan_vien = id_nhan_vien; }
+    public void setId_nhan_vien(Integer id_nhan_vien) { this.id_nhan_vien = id_nhan_vien; }
 
     public String getHo_ten() { return ho_ten; }
     public void setHo_ten(String ho_ten) { this.ho_ten = ho_ten; }

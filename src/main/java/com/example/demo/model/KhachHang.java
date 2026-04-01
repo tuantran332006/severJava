@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 public class KhachHang {
-    private int id_kh;
+    private Integer id_kh;
     private String ten_kh;
     private int nam_sinh_kh;
     private int diem_thuong_kh;
@@ -27,7 +27,7 @@ public class KhachHang {
         return id_kh;
     }
 
-    public void setId_kh(int id_kh) {
+    public void setId_kh(Integer id_kh) {
         this.id_kh = id_kh;
     }
 
