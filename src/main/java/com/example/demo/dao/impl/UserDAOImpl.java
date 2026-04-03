@@ -94,16 +94,6 @@ public class UserDAOImpl {
         return count != null && count > 0;
     }
 
-    public boolean existsById(int idUser) {
-        Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM \"user\" WHERE id_user = ?",
-                Integer.class,
-                idUser
-        );
-
-        return count != null && count > 0;
-    }
-
     public List<User> searchByUsername(String keyword) {
         return jdbcTemplate.query(
                 "SELECT * FROM \"user\" WHERE username LIKE ? ORDER BY id_user DESC",
