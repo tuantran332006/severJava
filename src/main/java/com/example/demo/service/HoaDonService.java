@@ -1,13 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.dao.ChiTietHoaDonDAO;
 import com.example.demo.dao.HoaDonDAO;
-import com.example.demo.dao.impl.ChiTietHoaDonDAOImpl;
-import com.example.demo.dao.impl.HoaDonDAOImpl;
-import com.example.demo.dao.impl.LoSanPhamDAOImpl;
-import com.example.demo.dao.impl.SanPhamDAOImpl;
+import com.example.demo.dao.LoSanPhamDAO;
+import com.example.demo.dao.SanPhamDAO;
 import com.example.demo.model.ChiTietHoaDon;
 import com.example.demo.model.HoaDon;
 import com.example.demo.model.LoSanPham;
+import com.example.demo.model.SanPham;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,95 +19,136 @@ import java.util.List;
 public class HoaDonService {
 
     private final HoaDonDAO hoaDonDAO;
-    private final ChiTietHoaDonDAOImpl chiTietHoaDonDAO;
-    private final SanPhamDAOImpl sanPhamDAO;
-    private final LoSanPhamDAOImpl loSanPhamDAO;
+    private final ChiTietHoaDonDAO chiTietHoaDonDAO;
+    private final SanPhamDAO sanPhamDAO;
+    private final LoSanPhamDAO loSanPhamDAO;
 
     public HoaDonService(
-            HoaDonDAOImpl hoaDonDAO,
-            ChiTietHoaDonDAOImpl chiTietHoaDonDAO,
-            SanPhamDAOImpl sanPhamDAO,
-            LoSanPhamDAOImpl loSanPhamDAO) {
-
+            HoaDonDAO hoaDonDAO,
+            ChiTietHoaDonDAO chiTietHoaDonDAO,
+            SanPhamDAO sanPhamDAO,
+            LoSanPhamDAO loSanPhamDAO) {
         this.hoaDonDAO = hoaDonDAO;
         this.chiTietHoaDonDAO = chiTietHoaDonDAO;
         this.sanPhamDAO = sanPhamDAO;
         this.loSanPhamDAO = loSanPhamDAO;
     }
 
-    // ========================= TẠO HÓA ĐƠN (TRANSACTION) =========================
-
     @Transactional
-    public boolean taoHoaDon(
-            HoaDon hoaDon,
-            List<ChiTietHoaDon> dsChiTiet,
-            List<LoSanPham> dsLoUpdate) {
-
+    public boolean taoHoaDon(HoaDon hoaDon, List<ChiTietHoaDon> dsChiTiet) {
         if (!validateThanhToan(hoaDon, dsChiTiet)) {
             return false;
         }
 
-        // 1) Insert hóa đơn
-        int idHoaDon = hoaDonDAO.insertAndReturnId(hoaDon);
-        if (idHoaDon <= 0) {
-            throw new RuntimeException("Lỗi lưu hóa đơn");
+        // 1. Kiểm tra tồn kho trước
+        for (ChiTietHoaDon ct : dsChiTiet) {
+            SanPham sp = sanPhamDAO.findById(ct.getId_san_pham());
+            if (sp == null) {
+                throw new RuntimeException("Không tìm thấy sản phẩm ID " + ct.getId_san_pham());
+            }
+
+            Integer tonKho = sp.getTongSoLuongSpTrongKho();
+            if (tonKho == null || tonKho < ct.getSo_luong()) {
+                throw new RuntimeException("Sản phẩm ID " + ct.getId_san_pham() + " không đủ tồn kho");
+            }
+
+            List<LoSanPham> dsLo = loSanPhamDAO.findConHangBySanPhamId(ct.getId_san_pham());
+            int tongTonTheoLo = dsLo.stream().mapToInt(LoSanPham::getSo_luong_con).sum();
+
+            if (tongTonTheoLo < ct.getSo_luong()) {
+                throw new RuntimeException("Tổng tồn theo lô không đủ cho sản phẩm ID " + ct.getId_san_pham());
+            }
         }
 
-        // 2) Insert chi tiết + trừ tồn sản phẩm
+        // 2. Lưu hóa đơn
+        Integer idHoaDon = hoaDonDAO.insertAndReturnId(hoaDon);
+        if (idHoaDon == null || idHoaDon <= 0) {
+            throw new RuntimeException("Lỗi lưu hóa đơn");
+        }
+        hoaDon.setId_hoa_don(idHoaDon);
+
+        // 3. Lưu chi tiết + trừ tồn theo lô + giảm tồn tổng
         for (ChiTietHoaDon ct : dsChiTiet) {
             ct.setId_hoa_don(idHoaDon);
 
-            int idCT = chiTietHoaDonDAO.insertAndReturnId(ct);
-            if (idCT <= 0) {
-                throw new RuntimeException(
-                        "Lỗi lưu chi tiết hóa đơn (id_sp=" + ct.getId_san_pham() + ")"
-                );
+            Integer idCT = chiTietHoaDonDAO.insertAndReturnId(ct);
+            if (idCT == null || idCT <= 0) {
+                throw new RuntimeException("Lỗi lưu chi tiết hóa đơn cho sản phẩm ID " + ct.getId_san_pham());
             }
+            ct.setId_chi_tiet(idCT);
+
+            truTonTheoLo(ct.getId_san_pham(), ct.getSo_luong());
 
             boolean okSp = sanPhamDAO.giamSoLuong(ct.getId_san_pham(), ct.getSo_luong());
             if (!okSp) {
-                throw new RuntimeException(
-                        "Sản phẩm ID " + ct.getId_san_pham() + " không đủ tồn kho"
-                );
-            }
-        }
-
-        // 3) Trừ tồn LÔ (FEFO/FIFO tuỳ logic phía controller)
-        if (dsLoUpdate != null) {
-            for (LoSanPham lo : dsLoUpdate) {
-                int idLo = lo.getId_lo();
-                int soLuongGiam = lo.getSo_luong_nhap(); // dùng làm số lượng giảm (đúng như thiết kế ban đầu)
-
-                boolean okLo = loSanPhamDAO.giamSoLuongCon(idLo, soLuongGiam);
-                if (!okLo) {
-                    throw new RuntimeException(
-                            "Lỗi cập nhật lô sản phẩm (id_lo=" + idLo + ")"
-                    );
-                }
+                throw new RuntimeException("Lỗi giảm tồn tổng sản phẩm ID " + ct.getId_san_pham());
             }
         }
 
         return true;
     }
 
-    // ========================= VALIDATE =========================
+    private void truTonTheoLo(int idSp, int soLuongCanTru) {
+        List<LoSanPham> dsLo = loSanPhamDAO.findConHangBySanPhamId(idSp);
+
+        int conPhaiTru = soLuongCanTru;
+
+        for (LoSanPham lo : dsLo) {
+            if (conPhaiTru <= 0) {
+                break;
+            }
+
+            int slCon = lo.getSo_luong_con();
+            if (slCon <= 0) {
+                continue;
+            }
+
+            int soLuongTruThucTe = Math.min(slCon, conPhaiTru);
+
+            boolean okLo = loSanPhamDAO.giamSoLuongCon(lo.getId_lo(), soLuongTruThucTe);
+            if (!okLo) {
+                throw new RuntimeException("Lỗi cập nhật lô sản phẩm ID lô = " + lo.getId_lo());
+            }
+
+            conPhaiTru -= soLuongTruThucTe;
+        }
+
+        if (conPhaiTru > 0) {
+            throw new RuntimeException("Không đủ tồn kho theo lô cho sản phẩm ID " + idSp);
+        }
+    }
 
     private boolean validateThanhToan(HoaDon hoaDon, List<ChiTietHoaDon> dsChiTiet) {
         if (hoaDon == null) return false;
         if (dsChiTiet == null || dsChiTiet.isEmpty()) return false;
 
+        if (hoaDon.getKhachHang() == null || hoaDon.getKhachHang().getId_kh() <= 0) return false;
+        if (hoaDon.getNhanVien() == null || hoaDon.getNhanVien().getId_nhan_vien() <= 0) return false;
+        if (hoaDon.getNgay_lap() == null) return false;
+
+        double tongChiTiet = 0.0;
+
         for (ChiTietHoaDon ct : dsChiTiet) {
+            if (ct == null) return false;
             if (ct.getId_san_pham() <= 0) return false;
             if (ct.getSo_luong() <= 0) return false;
             if (ct.getDon_gia() < 0) return false;
 
             double expected = ct.getSo_luong() * ct.getDon_gia();
             if (Math.abs(ct.getThanh_tien() - expected) > 0.0001) return false;
-        }
-        return true;
-    }
 
-    // ==================== CÁC HÀM ĐỌC / ĐƠN GIẢN ====================
+            tongChiTiet += ct.getThanh_tien();
+        }
+
+        double giamGia = 0.0;
+        if (hoaDon.getKhuyenMai() != null) {
+            giamGia = hoaDon.getKhuyenMai().getPhan_tram_giam();
+            if (giamGia < 0 || giamGia > 100) return false;
+        }
+
+        double tongSauGiam = tongChiTiet * (1 - giamGia / 100.0);
+        return Math.abs(hoaDon.getTong_tien() - tongSauGiam) <= 0.0001;
+    }
 
     public boolean suaHoaDon(HoaDon hoaDon) {
         return hoaDonDAO.update(hoaDon);

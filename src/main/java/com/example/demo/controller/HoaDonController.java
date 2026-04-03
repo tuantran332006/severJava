@@ -27,6 +27,10 @@ public class HoaDonController {
 
     private final HoaDonService hoaDonService;
 
+    public HoaDonController(HoaDonService hoaDonService) {
+        this.hoaDonService = hoaDonService;
+    }
+
     public HoaDonController() {
         this.hoaDonService = new HoaDonService(null, null, null, null); // service tự quản lý transaction khi tạo hóa đơn
     }
@@ -53,7 +57,7 @@ public class HoaDonController {
             }).collect(Collectors.toList());
         }
 
-        boolean ok = hoaDonService.taoHoaDon(req.getHoaDon(), req.getChiTietList(), dsLoUpdate);
+        boolean ok = hoaDonService.taoHoaDon(req.getHoaDon(), req.getChiTietList());
         if (ok) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResult.success("Tạo hóa đơn thành công"));
