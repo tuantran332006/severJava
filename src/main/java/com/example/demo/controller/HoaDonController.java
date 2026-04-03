@@ -152,31 +152,9 @@ public class HoaDonController {
     public static class CreateHoaDonRequest {
         @NotNull @Valid
         private HoaDon hoaDon;
-
         @NotEmpty @Valid
         private List<ChiTietHoaDon> chiTietList;
 
-        // Danh sách lô cần trừ tồn (id lô + số lượng giảm)
-
-        public HoaDon getHoaDon() { return hoaDon; }
-        public void setHoaDon(HoaDon hoaDon) { this.hoaDon = hoaDon; }
-
-        public List<ChiTietHoaDon> getChiTietList() { return chiTietList; }
-        public void setChiTietList(List<ChiTietHoaDon> chiTietList) { this.chiTietList = chiTietList; }
-
-    }
-
-    public static class LoGiamRequest {
-        @Min(1)
-        private int idLo;
-
-        @Min(1)
-        private int soLuongGiam;
-
-        public int getIdLo() { return idLo; }
-        public void setIdLo(int idLo) { this.idLo = idLo; }
-        public int getSoLuongGiam() { return soLuongGiam; }
-        public void setSoLuongGiam(int soLuongGiam) { this.soLuongGiam = soLuongGiam; }
     }
 
     public static class ApiResult {
