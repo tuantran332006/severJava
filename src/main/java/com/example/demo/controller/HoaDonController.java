@@ -40,26 +40,19 @@ public class HoaDonController {
      *   controller sẽ map soLuongGiam -> lo.setSo_luong_nhap(soLuongGiam) trước khi gọi service.
      */
     @PostMapping
-    public ResponseEntity<ApiResult> taoHoaDon(@Valid @RequestBody CreateHoaDonRequest req) {
-        // Map loGiamList -> List<LoSanPham> theo "hack" của service hiện tại:
-        List<LoSanPham> dsLoUpdate = null;
-        if (req.getLoGiamList() != null) {
-            dsLoUpdate = req.getLoGiamList().stream().map(loReq -> {
-                LoSanPham lo = new LoSanPham();
-                lo.setId_lo(loReq.getIdLo());
-                // ⚠️ Mapping theo placeholder trong Service: dùng so_luong_nhap để chứa "số lượng cần trừ"
-                lo.setSo_luong_nhap(loReq.getSoLuongGiam());
-                return lo;
-            }).collect(Collectors.toList());
-        }
+    public ResponseEntity<ApiResult> taoHoaDon(
+            @Valid @RequestBody HoaDon hoaDon,
+            @Valid @RequestBody List<ChiTietHoaDon> chiTietList) {
 
-        boolean ok = hoaDonService.taoHoaDon(req.getHoaDon(), req.getChiTietList(), dsLoUpdate);
+        boolean ok = hoaDonService.taoHoaDon(hoaDon,chiTietList);
+
         if (ok) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResult.success("Tạo hóa đơn thành công"));
         }
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResult.fail("Tạo hóa đơn thất bại. Vui lòng kiểm tra dữ liệu đầu vào."));
+                .body(ApiResult.fail("Tạo hóa đơn thất bại"));
     }
 
     // ========================== CẬP NHẬT / XOÁ ==========================
@@ -164,8 +157,6 @@ public class HoaDonController {
         private List<ChiTietHoaDon> chiTietList;
 
         // Danh sách lô cần trừ tồn (id lô + số lượng giảm)
-        @Valid
-        private List<LoGiamRequest> loGiamList;
 
         public HoaDon getHoaDon() { return hoaDon; }
         public void setHoaDon(HoaDon hoaDon) { this.hoaDon = hoaDon; }
@@ -173,8 +164,6 @@ public class HoaDonController {
         public List<ChiTietHoaDon> getChiTietList() { return chiTietList; }
         public void setChiTietList(List<ChiTietHoaDon> chiTietList) { this.chiTietList = chiTietList; }
 
-        public List<LoGiamRequest> getLoGiamList() { return loGiamList; }
-        public void setLoGiamList(List<LoGiamRequest> loGiamList) { this.loGiamList = loGiamList; }
     }
 
     public static class LoGiamRequest {
