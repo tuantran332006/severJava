@@ -21,6 +21,8 @@ public class LoSanPhamDAOImpl implements LoSanPhamDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
+
     private static class LoSanPhamRowMapper implements RowMapper<LoSanPham> {
         @Override
         public LoSanPham mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -48,6 +50,22 @@ public class LoSanPhamDAOImpl implements LoSanPhamDAO {
     private final RowMapper<LoSanPham> rowMapper = new LoSanPhamRowMapper();
 
     @Override
+    public int checkSoLuongSPConTheoId(int idLo) {
+        String sql = """
+            SELECT so_luong_con
+            FROM lo_san_pham
+            WHERE id_lo = ?
+            """;
+
+        Integer result = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                idLo
+        );
+
+        return result != null ? result : 0;
+    }
+    @Override
     public Integer insertAndReturnId(LoSanPham entity) {
         String sql = """
             INSERT INTO lo_san_pham
@@ -70,7 +88,6 @@ public class LoSanPhamDAOImpl implements LoSanPhamDAO {
                 entity.getHan_su_dung()
         );
     }
-
     @Override
     public boolean insert(LoSanPham entity) {
         Integer id = insertAndReturnId(entity);
@@ -276,5 +293,23 @@ public class LoSanPhamDAOImpl implements LoSanPhamDAO {
                 idLo,
                 soLuongBot
         ) > 0;
+    }
+    @Override
+    public boolean checkLoSanPhamTonTaiTheoId(int idLo) {
+        String sql = """
+            SELECT EXISTS (
+                SELECT 1
+                FROM lo_san_pham
+                WHERE id_lo = ?
+            )
+            """;
+
+        Boolean exists = jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                idLo
+        );
+
+        return exists != null && exists;
     }
 }

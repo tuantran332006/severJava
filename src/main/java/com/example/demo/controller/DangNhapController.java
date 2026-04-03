@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.LoginRequest;
+import com.example.demo.model.NhanVien;
 import com.example.demo.model.User;
 import com.example.demo.service.DangNhapService;
 import com.example.demo.service.DangNhapService.UserView;
@@ -19,45 +20,36 @@ public class DangNhapController {
 
     @PostMapping("/login")
     public ResponseEntity<?> dangNhap(@RequestBody LoginRequest request) {
-        try {
-            System.out.println("username = " + request.getUsername());
-            System.out.println("password = " + request.getPassword());
 
-            UserView userView = dangNhapService.dangNhap(
-                    request.getUsername(),
-                    request.getPassword()
-            );
+        UserView userView = dangNhapService.dangNhap(
+                request.getUsername(),
+                request.getPassword()
+        );
 
-            System.out.println("userView = " + userView);
-
-            if (userView == null) {
-                return ResponseEntity
-                        .badRequest()
-                        .body("Sai username hoặc password");
-            }
-
-            return ResponseEntity.ok(userView);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(e.getMessage());
+        if (userView == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Sai username hoặc password");
         }
+
+        return ResponseEntity.ok(userView);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> dangKy(@RequestBody User user) {
-        try {
-            UserView userView = dangNhapService.dangKyVaTraUser(user, user.getPassword());
+    public ResponseEntity<?> dangKy(
+            @RequestBody User user,
+            @RequestBody NhanVien nv,
+            @RequestParam String password) {
 
-            if (userView == null) {
-                return ResponseEntity.badRequest().body("Username đã tồn tại");
-            }
+        boolean success = dangNhapService.dangKy(user,nv, password);
 
-            return ResponseEntity.ok(userView);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Lỗi đăng ký: " + e.getMessage());
+        if (!success) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Username đã tồn tại");
         }
+
+        return ResponseEntity.ok("Đăng ký thành công");
     }
 
     @GetMapping("/exists/{username}")

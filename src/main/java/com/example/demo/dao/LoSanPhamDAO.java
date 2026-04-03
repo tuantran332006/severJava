@@ -10,4 +10,6 @@ public interface LoSanPhamDAO extends
         ExpiryFilterDAO<LoSanPham>,
         LoSanPhamFilterDAO<LoSanPham>,
         LotStockDAO {
+    public int checkSoLuongSPConTheoId(int idSp);
+    public boolean checkLoSanPhamTonTaiTheoId(int idLo);
 }

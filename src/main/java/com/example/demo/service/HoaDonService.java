@@ -2,12 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.dao.HoaDonDAO;
 import com.example.demo.dao.impl.ChiTietHoaDonDAOImpl;
-import com.example.demo.dao.impl.HoaDonDAOImpl;
 import com.example.demo.dao.impl.LoSanPhamDAOImpl;
 import com.example.demo.dao.impl.SanPhamDAOImpl;
 import com.example.demo.model.ChiTietHoaDon;
 import com.example.demo.model.HoaDon;
-import com.example.demo.model.LoSanPham;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,38 +21,44 @@ public class HoaDonService {
     private final ChiTietHoaDonDAOImpl chiTietHoaDonDAO;
     private final SanPhamDAOImpl sanPhamDAO;
     private final LoSanPhamDAOImpl loSanPhamDAO;
-
-    public HoaDonService(
-            HoaDonDAOImpl hoaDonDAO,
-            ChiTietHoaDonDAOImpl chiTietHoaDonDAO,
-            SanPhamDAOImpl sanPhamDAO,
-            LoSanPhamDAOImpl loSanPhamDAO) {
-
+    public HoaDonService(HoaDonDAO hoaDonDAO,
+                         ChiTietHoaDonDAOImpl chiTietHoaDonDAO,
+                         SanPhamDAOImpl sanPhamDAO,
+                         LoSanPhamDAOImpl loSanPhamDAO) {
         this.hoaDonDAO = hoaDonDAO;
         this.chiTietHoaDonDAO = chiTietHoaDonDAO;
         this.sanPhamDAO = sanPhamDAO;
         this.loSanPhamDAO = loSanPhamDAO;
     }
-
     // ========================= TẠO HÓA ĐƠN (TRANSACTION) =========================
-
+//xong
     @Transactional
     public boolean taoHoaDon(
             HoaDon hoaDon,
-            List<ChiTietHoaDon> dsChiTiet,
-            List<LoSanPham> dsLoUpdate) {
+            List<ChiTietHoaDon> dsChiTiet) {
 
         if (!validateThanhToan(hoaDon, dsChiTiet)) {
             return false;
         }
 
+        for (ChiTietHoaDon check : dsChiTiet) {
+
+            if (!loSanPhamDAO.checkLoSanPhamTonTaiTheoId(check.getId_lo_san_pham())) {
+
+                throw new RuntimeException(
+                        "Lô sản phẩm ID "
+                                + check.getId_lo_san_pham()
+                                + " không tồn tại"
+                );
+            }
+        }
         // 1) Insert hóa đơn
         int idHoaDon = hoaDonDAO.insertAndReturnId(hoaDon);
         if (idHoaDon <= 0) {
             throw new RuntimeException("Lỗi lưu hóa đơn");
         }
 
-        // 2) Insert chi tiết + trừ tồn sản phẩm
+        // 2) Insert chi tiết + trừ tồn sản phẩm+ trừ tồn lô
         for (ChiTietHoaDon ct : dsChiTiet) {
             ct.setId_hoa_don(idHoaDon);
 
@@ -70,22 +75,20 @@ public class HoaDonService {
                         "Sản phẩm ID " + ct.getId_san_pham() + " không đủ tồn kho"
                 );
             }
-        }
+            boolean okLo = loSanPhamDAO.giamSoLuongCon(
+                    ct.getId_lo_san_pham(),
+                    ct.getSo_luong()
+            );
 
-        // 3) Trừ tồn LÔ (FEFO/FIFO tuỳ logic phía controller)
-        if (dsLoUpdate != null) {
-            for (LoSanPham lo : dsLoUpdate) {
-                int idLo = lo.getId_lo();
-                int soLuongGiam = lo.getSo_luong_nhap(); // dùng làm số lượng giảm (đúng như thiết kế ban đầu)
-
-                boolean okLo = loSanPhamDAO.giamSoLuongCon(idLo, soLuongGiam);
-                if (!okLo) {
-                    throw new RuntimeException(
-                            "Lỗi cập nhật lô sản phẩm (id_lo=" + idLo + ")"
-                    );
-                }
+            if (!okLo) {
+                throw new RuntimeException(
+                        "Lô sản phẩm ID "
+                                + ct.getId_lo_san_pham()
+                                + " không đủ số lượng"
+                );
             }
         }
+
 
         return true;
     }
@@ -95,14 +98,10 @@ public class HoaDonService {
     private boolean validateThanhToan(HoaDon hoaDon, List<ChiTietHoaDon> dsChiTiet) {
         if (hoaDon == null) return false;
         if (dsChiTiet == null || dsChiTiet.isEmpty()) return false;
-
         for (ChiTietHoaDon ct : dsChiTiet) {
             if (ct.getId_san_pham() <= 0) return false;
-            if (ct.getSo_luong() <= 0) return false;
+            if (ct.getSo_luong() <= loSanPhamDAO.checkSoLuongSPConTheoId(ct.getId_san_pham()) ) return false;
             if (ct.getDon_gia() < 0) return false;
-
-            double expected = ct.getSo_luong() * ct.getDon_gia();
-            if (Math.abs(ct.getThanh_tien() - expected) > 0.0001) return false;
         }
         return true;
     }
@@ -160,4 +159,5 @@ public class HoaDonService {
     public int tinhTongSoLuongBanTheoNam(int year) {
         return hoaDonDAO.sumQuantityByYear(year);
     }
+
 }

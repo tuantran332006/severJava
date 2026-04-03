@@ -26,6 +26,7 @@ public class ChiTietHoaDonDAOImpl implements ChiTietHoaDonDAO {
         public ChiTietHoaDon mapRow(ResultSet rs, int rowNum) throws SQLException {
             ChiTietHoaDon ct = new ChiTietHoaDon();
             ct.setId_chi_tiet(rs.getInt("id_chi_tiet"));
+            ct.setId_lo_san_pham(rs.getInt("id_lo_san_pham"));
             ct.setId_hoa_don(rs.getInt("id_hoa_don"));
             ct.setId_san_pham(rs.getInt("id_sp"));
             ct.setSo_luong(rs.getInt("so_luong"));
@@ -40,14 +41,16 @@ public class ChiTietHoaDonDAOImpl implements ChiTietHoaDonDAO {
     @Override
     public Integer insertAndReturnId(ChiTietHoaDon entity) {
         String sql = """
-            INSERT INTO chi_tiet_hoa_don (id_hoa_don, id_sp, so_luong, don_gia, thanh_tien)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO chi_tiet_hoa_don
+            (id_lo_san_pham, id_hoa_don, id_sp, so_luong, don_gia, thanh_tien)
+            VALUES (?, ?, ?, ?, ?, ?)
             RETURNING id_chi_tiet
         """;
 
         return jdbcTemplate.queryForObject(
                 sql,
                 Integer.class,
+                entity.getId_lo_san_pham(),
                 entity.getId_hoa_don(),
                 entity.getId_san_pham(),
                 entity.getSo_luong(),
@@ -70,12 +73,18 @@ public class ChiTietHoaDonDAOImpl implements ChiTietHoaDonDAO {
     public boolean update(ChiTietHoaDon entity) {
         String sql = """
             UPDATE chi_tiet_hoa_don
-            SET id_hoa_don = ?, id_sp = ?, so_luong = ?, don_gia = ?, thanh_tien = ?
+            SET id_lo_san_pham = ?,
+                id_hoa_don = ?,
+                id_sp = ?,
+                so_luong = ?,
+                don_gia = ?,
+                thanh_tien = ?
             WHERE id_chi_tiet = ?
         """;
 
         return jdbcTemplate.update(
                 sql,
+                entity.getId_lo_san_pham(),
                 entity.getId_hoa_don(),
                 entity.getId_san_pham(),
                 entity.getSo_luong(),

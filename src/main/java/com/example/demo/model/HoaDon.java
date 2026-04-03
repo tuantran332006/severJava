@@ -5,20 +5,22 @@ import java.time.LocalDate;
 public class HoaDon {
 
     private int id_hoa_don;
-    private KhachHang khachHang;
-    private NhanVien nhanVien;
-    private KhuyenMai khuyenMai;
+    private int id_kh;
+    private int id_nhanVien;
+    private int id_khuyenMai;
     private LocalDate ngay_lap;
     private double tong_tien;
     private String ghi_chu;
 
-    public HoaDon() {}
+    public HoaDon() {
+    }
 
-    public HoaDon(int id_hoa_don, KhachHang khachHang, NhanVien nhanVien,
+    public HoaDon(int id_hoa_don, int id_kh, int id_nhanVien, int id_khuyenMai,
                   LocalDate ngay_lap, double tong_tien, String ghi_chu) {
         this.id_hoa_don = id_hoa_don;
-        this.khachHang = khachHang;
-        this.nhanVien = nhanVien;
+        this.id_kh = id_kh;
+        this.id_nhanVien = id_nhanVien;
+        this.id_khuyenMai = id_khuyenMai;
         this.ngay_lap = ngay_lap;
         this.tong_tien = tong_tien;
         this.ghi_chu = ghi_chu;
@@ -32,26 +34,28 @@ public class HoaDon {
         this.id_hoa_don = id_hoa_don;
     }
 
-    public KhachHang getKhachHang() {
-        return khachHang;
+    public int getId_kh() {
+        return id_kh;
     }
 
-    public void setKhachHang(KhachHang khachHang) {
-        this.khachHang = khachHang;
+    public void setId_kh(int id_kh) {
+        this.id_kh = id_kh;
     }
 
-    public NhanVien getNhanVien() {
-        return nhanVien;
+    public int getId_nhanVien() {
+        return id_nhanVien;
     }
 
-    public void setNhanVien(NhanVien nhanVien) {
-        this.nhanVien = nhanVien;
+    public void setId_nhanVien(int id_nhanVien) {
+        this.id_nhanVien = id_nhanVien;
     }
 
-    public KhuyenMai getKhuyenMai() {return khuyenMai;}
+    public int getId_khuyenMai() {
+        return id_khuyenMai;
+    }
 
-    public void setKhuyenMai(KhuyenMai khuyenMai) {
-        this.khuyenMai = khuyenMai;
+    public void setId_khuyenMai(int id_khuyenMai) {
+        this.id_khuyenMai = id_khuyenMai;
     }
 
     public LocalDate getNgay_lap() {
@@ -82,8 +86,9 @@ public class HoaDon {
     public String toString() {
         return "HoaDon{" +
                 "id_hoa_don=" + id_hoa_don +
-                ", khachHang=" + khachHang +
-                ", nhanVien=" + nhanVien +
+                ", id_kh=" + id_kh +
+                ", id_nhanVien=" + id_nhanVien +
+                ", id_khuyenMai=" + id_khuyenMai +
                 ", ngay_lap=" + ngay_lap +
                 ", tong_tien=" + tong_tien +
                 ", ghi_chu='" + ghi_chu + '\'' +
