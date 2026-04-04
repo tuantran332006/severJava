@@ -131,7 +131,7 @@ public class HoaDonController {
         return ResponseEntity.ok(hoaDonService.tinhTongSoLuongBanTheoNam(year));
     }
 
-    // ========================== DTOs ==========================
+    // ========================== DTOs ==========================.
 
 
     public static class ApiResult {
