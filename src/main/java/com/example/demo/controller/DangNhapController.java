@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.LoginRequest;
-import com.example.demo.model.NhanVien;
 import com.example.demo.model.User;
 import com.example.demo.service.DangNhapService;
 import com.example.demo.service.DangNhapService.UserView;
@@ -36,12 +35,8 @@ public class DangNhapController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> dangKy(
-            @RequestBody User user,
-            @RequestBody NhanVien nv,
-            @RequestParam String password) {
-
-        boolean success = dangNhapService.dangKy(user,nv, password);
+    public ResponseEntity<?> dangKy(@RequestBody User user) {
+        boolean success = dangNhapService.dangKy(user);
 
         if (!success) {
             return ResponseEntity

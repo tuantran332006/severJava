@@ -2,11 +2,11 @@ package com.example.demo.model;
 
 public class ChiTietHoaDon {
 
-    private int id_chi_tiet;
-    private int id_lo_san_pham;
-    private int id_hoa_don;
-    private int id_san_pham;
-    private int so_luong;
+    private Integer id_chi_tiet;
+    private Integer id_lo_san_pham;
+    private Integer id_hoa_don;
+    private Integer id_san_pham;
+    private Integer so_luong;
     private double don_gia;
     private double thanh_tien;
 
@@ -25,43 +25,43 @@ public class ChiTietHoaDon {
                 '}';
     }
 
-    public int getId_chi_tiet() {
+    public Integer getId_chi_tiet() {
         return id_chi_tiet;
     }
 
-    public void setId_chi_tiet(int id_chi_tiet) {
+    public void setId_chi_tiet(Integer id_chi_tiet) {
         this.id_chi_tiet = id_chi_tiet;
     }
 
-    public int getId_lo_san_pham() {
+    public Integer getId_lo_san_pham() {
         return id_lo_san_pham;
     }
 
-    public void setId_lo_san_pham(int id_lo_san_pham) {
+    public void setId_lo_san_pham(Integer id_lo_san_pham) {
         this.id_lo_san_pham = id_lo_san_pham;
     }
 
-    public int getId_hoa_don() {
+    public Integer getId_hoa_don() {
         return id_hoa_don;
     }
 
-    public void setId_hoa_don(int id_hoa_don) {
+    public void setId_hoa_don(Integer id_hoa_don) {
         this.id_hoa_don = id_hoa_don;
     }
 
-    public int getId_san_pham() {
+    public Integer getId_san_pham() {
         return id_san_pham;
     }
 
-    public void setId_san_pham(int id_san_pham) {
+    public void setId_san_pham(Integer id_san_pham) {
         this.id_san_pham = id_san_pham;
     }
 
-    public int getSo_luong() {
+    public Integer getSo_luong() {
         return so_luong;
     }
 
-    public void setSo_luong(int so_luong) {
+    public void setSo_luong(Integer so_luong) {
         this.so_luong = so_luong;
     }
 
@@ -81,7 +81,7 @@ public class ChiTietHoaDon {
         this.thanh_tien = thanh_tien;
     }
 
-    public ChiTietHoaDon(int id_chi_tiet, int id_lo_san_pham, int id_hoa_don, int id_san_pham, int so_luong, double don_gia, double thanh_tien) {
+    public ChiTietHoaDon(Integer id_chi_tiet, Integer id_lo_san_pham, Integer id_hoa_don, Integer id_san_pham, Integer so_luong, double don_gia, double thanh_tien) {
         this.id_chi_tiet = id_chi_tiet;
         this.id_lo_san_pham = id_lo_san_pham;
         this.id_hoa_don = id_hoa_don;

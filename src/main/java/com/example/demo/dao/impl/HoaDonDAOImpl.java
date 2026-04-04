@@ -29,9 +29,9 @@ public class HoaDonDAOImpl implements HoaDonDAO, StatisticTimeDAO {
             HoaDon hd = new HoaDon();
 
             hd.setId_hoa_don(rs.getInt("id_hoa_don"));
-            hd.setId_kh(rs.getInt("id_kh"));
-            hd.setId_nhanVien(rs.getInt("id_nhan_vien"));
-            hd.setId_khuyenMai(rs.getInt("id_khuyen_mai"));
+            hd.setId_kh(rs.getObject("id_kh", Integer.class));
+            hd.setId_nhanVien(rs.getObject("id_nhan_vien", Integer.class));
+            hd.setId_khuyenMai(rs.getObject("id_khuyen_mai", Integer.class));
 
             if (rs.getDate("ngay_lap") != null) {
                 hd.setNgay_lap(rs.getDate("ngay_lap").toLocalDate());

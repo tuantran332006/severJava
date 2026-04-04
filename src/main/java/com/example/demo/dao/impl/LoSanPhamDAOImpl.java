@@ -52,9 +52,11 @@ public class LoSanPhamDAOImpl implements LoSanPhamDAO {
     @Override
     public int checkSoLuongSPConTheoId(int idLo) {
         String sql = """
-            SELECT so_luong_con
-            FROM lo_san_pham
-            WHERE id_lo = ?
+            SELECT COALESCE((
+                SELECT so_luong_con
+                FROM lo_san_pham
+                WHERE id_lo = ?
+            ), 0)
             """;
 
         Integer result = jdbcTemplate.queryForObject(

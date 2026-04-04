@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.ChiTietHoaDon;
 import com.example.demo.model.HoaDon;
+import com.example.demo.model.HoaDonDetailResponse;
+import com.example.demo.model.TaoHoaDonRequest;
 import com.example.demo.service.HoaDonService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -23,30 +24,38 @@ public class HoaDonController {
 
     private final HoaDonService hoaDonService;
 
-    public HoaDonController() {
-        this.hoaDonService = new HoaDonService(null, null, null, null); // service tự quản lý transaction khi tạo hóa đơn
+    public HoaDonController(HoaDonService hoaDonService) {
+        this.hoaDonService = hoaDonService;
     }
 
     @PostMapping
-    public ResponseEntity<ApiResult> taoHoaDon(
-            @Valid @RequestBody HoaDon hoaDon,
-            @Valid @RequestBody List<ChiTietHoaDon> chiTietList) {
+    public ResponseEntity<ApiResult> taoHoaDon(@Valid @RequestBody TaoHoaDonRequest request) {
+        try {
+            if (request == null || request.getHoaDon() == null || request.getChiTietList() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(ApiResult.fail("Du lieu tao hoa don khong hop le"));
+            }
 
-        boolean ok = hoaDonService.taoHoaDon(hoaDon,chiTietList);
+            boolean ok = hoaDonService.taoHoaDon(request.getHoaDon(), request.getChiTietList());
 
-        if (ok) {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(ApiResult.success("Tạo hóa đơn thành công"));
+            if (ok) {
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(ApiResult.success("Tao hoa don thanh cong"));
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResult.fail("Tao hoa don that bai"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResult.fail(e.getClass().getSimpleName() + ": " + e.getMessage()));
         }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResult.fail("Tạo hóa đơn thất bại"));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> suaHoaDon(@PathVariable("id") int id,
                                           @Valid @RequestBody HoaDon request) {
-        request.setId_hoa_don(id); // đảm bảo cập nhật đúng bản ghi
+        request.setId_hoa_don(id);
         boolean ok = hoaDonService.suaHoaDon(request);
         return ok ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
@@ -63,35 +72,34 @@ public class HoaDonController {
         return hd != null ? ResponseEntity.ok(hd) : ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<HoaDonDetailResponse> layChiTietHoaDon(@PathVariable("id") int id) {
+        HoaDonDetailResponse detail = hoaDonService.layChiTietHoaDon(id);
+        return detail != null ? ResponseEntity.ok(detail) : ResponseEntity.notFound().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<HoaDon>> layTatCa() {
         return ResponseEntity.ok(hoaDonService.layTatCaHoaDon());
     }
 
-    // ========================== TRUY VẤN THEO THỜI GIAN ==========================
-
-    /** Lấy hoá đơn theo ngày (yyyy-MM-dd). */
     @GetMapping("/by-date")
     public ResponseEntity<List<HoaDon>> layTheoNgay(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(hoaDonService.layHoaDonTheoNgay(date));
     }
 
-    /** Lấy hoá đơn theo tháng (yyyy-MM). */
     @GetMapping("/by-month")
     public ResponseEntity<List<HoaDon>> layTheoThang(@RequestParam("month") String month) {
         YearMonth ym = YearMonth.parse(month);
         return ResponseEntity.ok(hoaDonService.layHoaDonTheoThang(ym));
     }
 
-    /** Lấy hoá đơn theo năm. */
     @GetMapping("/by-year")
     public ResponseEntity<List<HoaDon>> layTheoNam(
             @RequestParam("year") @Min(1970) @Max(3000) int year) {
         return ResponseEntity.ok(hoaDonService.layHoaDonTheoNam(year));
     }
-
-    // ========================== THỐNG KÊ DOANH THU ==========================
 
     @GetMapping("/sum/amount/day")
     public ResponseEntity<Double> tongDoanhThuNgay(
@@ -111,8 +119,6 @@ public class HoaDonController {
         return ResponseEntity.ok(hoaDonService.tinhTongDoanhThuTheoNam(year));
     }
 
-    // ========================== THỐNG KÊ SỐ LƯỢNG BÁN ==========================
-
     @GetMapping("/sum/quantity/day")
     public ResponseEntity<Integer> tongSoLuongBanNgay(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -131,9 +137,6 @@ public class HoaDonController {
         return ResponseEntity.ok(hoaDonService.tinhTongSoLuongBanTheoNam(year));
     }
 
-    // ========================== DTOs ==========================.
-
-
     public static class ApiResult {
         private boolean success;
         private String message;
@@ -146,5 +149,12 @@ public class HoaDonController {
         public static ApiResult success(String msg) { return new ApiResult(true, msg); }
         public static ApiResult fail(String msg) { return new ApiResult(false, msg); }
 
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 }

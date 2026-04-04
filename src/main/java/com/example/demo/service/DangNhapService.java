@@ -1,77 +1,54 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.impl.NhanVienDAOImpl;
 import com.example.demo.dao.impl.UserDAOImpl;
-import com.example.demo.model.NhanVien;
 import com.example.demo.model.User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class DangNhapService {
 
     private final UserDAOImpl userDAO;
-    private final NhanVienDAOImpl nhanVienDAO;
-    public DangNhapService(UserDAOImpl userDAO, NhanVienDAOImpl nhanVienDAO) {
+
+    public DangNhapService(UserDAOImpl userDAO) {
         this.userDAO = userDAO;
-        this.nhanVienDAO = nhanVienDAO;
     }
 
     public UserView dangNhap(String username, String passwordPlain) {
-
         Optional<User> opt = userDAO.findByUsername(username);
         if (opt.isEmpty()) return null;
 
         User dbUser = opt.get();
-
-        // ===== TẠM THỜI plaintext (CHỈ học, KHÔNG production) =====
-        boolean matched =
-                dbUser.getPassword() != null &&
-                        dbUser.getPassword().equals(passwordPlain);
-
-
+        boolean matched = dbUser.getPassword() != null && dbUser.getPassword().equals(passwordPlain);
         if (!matched) return null;
 
         return UserView.from(dbUser);
     }
 
-    /** Kiểm tra username đã tồn tại */
-    public Boolean kiemTraTonTaiUsername(String username){
+    public Boolean kiemTraTonTaiUsername(String username) {
         return userDAO.existsByUsername(username);
     }
+
     public boolean kiemTraTonTaiUserid(int userid) {
         return !userDAO.existsById(userid);
     }
-    public boolean dangKy(User newUser,NhanVien nhanVien, String plainPassword) {
 
-        // tạo nhân viên
-        NhanVien nv = new NhanVien();
-
-        nv.setHo_ten(nhanVien.getHo_ten());
-        nv.setNgay_vao_lam(LocalDateTime.now());
-        nv.setChuc_vu(nhanVien.getChuc_vu());
-        nv.setLuong(nhanVien.getLuong());
-        nv.setDia_chi(nhanVien.getDia_chi());
-        nv.setSo_dien_thoai(nhanVien.getSo_dien_thoai());
-        nv.setTuoi(nhanVien.getTuoi());
-        Integer idNhanVien = nhanVienDAO.insertAndReturnId(nv);
-        if (idNhanVien == null) {
-            throw new RuntimeException("Không tạo được nhân viên");
+    public boolean dangKy(User newUser) {
+        if (newUser == null || newUser.getUsername() == null || newUser.getUsername().isBlank()) {
+            return false;
         }
 
-        newUser.setPassword(plainPassword);
-        newUser.setId_nhan_vien(idNhanVien);
-        int iduser=userDAO.insertAndReturnId(newUser);
-        boolean inserted = userDAO.insert(newUser);
+        if (userDAO.existsByUsername(newUser.getUsername())) {
+            return false;
+        }
 
-        if (!inserted) return false;
+        if (newUser.getVai_tro() == null || newUser.getVai_tro().isBlank()) {
+            newUser.setVai_tro("NHAN_VIEN");
+        }
 
-        return true;
+        return userDAO.insert(newUser);
     }
-
-    // ================= DTO an toàn =================
 
     public static class UserView {
         private int id_user;

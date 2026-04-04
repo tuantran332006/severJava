@@ -113,6 +113,17 @@ public class ChiTietHoaDonDAOImpl implements ChiTietHoaDonDAO {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public List<ChiTietHoaDon> findByHoaDonId(int idHoaDon) {
+        String sql = """
+            SELECT *
+            FROM chi_tiet_hoa_don
+            WHERE id_hoa_don = ?
+            ORDER BY id_chi_tiet ASC
+        """;
+
+        return jdbcTemplate.query(sql, rowMapper, idHoaDon);
+    }
+
     @Override
     public List<ChiTietHoaDon> findByDate(LocalDate date) {
         String sql = """
