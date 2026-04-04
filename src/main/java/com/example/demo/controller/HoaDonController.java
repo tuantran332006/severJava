@@ -2,13 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ChiTietHoaDon;
 import com.example.demo.model.HoaDon;
-import com.example.demo.model.LoSanPham;
 import com.example.demo.service.HoaDonService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/hoa-don")
@@ -31,14 +27,6 @@ public class HoaDonController {
         this.hoaDonService = new HoaDonService(null, null, null, null); // service tự quản lý transaction khi tạo hóa đơn
     }
 
-    // ========================== TẠO HÓA ĐƠN (TRANSACTION) ==========================
-
-    /**
-     * Tạo hóa đơn + chi tiết + cập nhật tồn kho (sản phẩm & lô) trong 1 transaction.
-     * - req.loGiamList: danh sách lô cần TRỪ số lượng (theo id lô và số lượng giảm).
-     * - Do HoaDonService hiện đang dùng tạm so_luong_nhap như "số lượng giảm",
-     *   controller sẽ map soLuongGiam -> lo.setSo_luong_nhap(soLuongGiam) trước khi gọi service.
-     */
     @PostMapping
     public ResponseEntity<ApiResult> taoHoaDon(
             @Valid @RequestBody HoaDon hoaDon,
@@ -55,8 +43,6 @@ public class HoaDonController {
                 .body(ApiResult.fail("Tạo hóa đơn thất bại"));
     }
 
-    // ========================== CẬP NHẬT / XOÁ ==========================
-
     @PutMapping("/{id}")
     public ResponseEntity<Void> suaHoaDon(@PathVariable("id") int id,
                                           @Valid @RequestBody HoaDon request) {
@@ -70,8 +56,6 @@ public class HoaDonController {
         boolean ok = hoaDonService.xoaHoaDon(id);
         return ok ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
-
-    // ========================== TRUY VẤN CƠ BẢN ==========================
 
     @GetMapping("/{id}")
     public ResponseEntity<HoaDon> timTheoId(@PathVariable("id") int id) {
@@ -149,13 +133,6 @@ public class HoaDonController {
 
     // ========================== DTOs ==========================
 
-    public static class CreateHoaDonRequest {
-        @NotNull @Valid
-        private HoaDon hoaDon;
-        @NotEmpty @Valid
-        private List<ChiTietHoaDon> chiTietList;
-
-    }
 
     public static class ApiResult {
         private boolean success;
@@ -169,9 +146,5 @@ public class HoaDonController {
         public static ApiResult success(String msg) { return new ApiResult(true, msg); }
         public static ApiResult fail(String msg) { return new ApiResult(false, msg); }
 
-        public boolean isSuccess() { return success; }
-        public void setSuccess(boolean success) { this.success = success; }
-        public String getMessage() { return message; }
-        public void setMessage(String message) { this.message = message; }
     }
 }
