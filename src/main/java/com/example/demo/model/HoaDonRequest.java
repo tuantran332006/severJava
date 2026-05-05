@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 public class HoaDonRequest {
     private int id_hoa_don;
     private int id_kh;
-    private int id_nhan_vien;
+    private Integer id_nhan_vien;
     private LocalDateTime ngay_lap;
     private double tong_tien;
     private double giam_gia;

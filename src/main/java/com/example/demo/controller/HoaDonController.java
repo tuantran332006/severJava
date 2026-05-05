@@ -74,6 +74,7 @@ public class HoaDonController {
 
     @GetMapping("/{id}/detail")
     public ResponseEntity<HoaDonDetailResponse> layChiTietHoaDon(@PathVariable("id") int id) {
+        // Sửa kiểu dữ liệu ở đây thành HoaDonDetailResponse
         HoaDonDetailResponse detail = hoaDonService.layChiTietHoaDon(id);
         return detail != null ? ResponseEntity.ok(detail) : ResponseEntity.notFound().build();
     }
